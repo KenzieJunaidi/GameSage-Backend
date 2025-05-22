@@ -26,9 +26,8 @@ combined_features = load_npz('assets/combined_features.npz')
 #     model = pickle.load(f)
 
 # Attempt to Load with Google Drive (Railway)
-FILE_ID = '1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt'
 MODEL_PATH = 'model.pkl'
-URL = f'https://drive.google.com/file/d/{FILE_ID}/view?usp=sharing'
+URL = f'https://drive.google.com/file/d/1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt/view?usp=sharing'
 
 gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
 
