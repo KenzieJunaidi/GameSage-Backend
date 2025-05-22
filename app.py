@@ -37,8 +37,12 @@ else:
     print("Model file found locally.")
 
 # Load the model
-with open(MODEL_PATH, 'rb') as f:
-    model = pickle.load(f)
+try:
+    with open(MODEL_PATH, 'rb') as f:
+        model = pickle.load(f)
+except Exception as e:
+    print("Failed to load pickle model:", e)
+    raise e
 
 # Create index mapping
 data_df = df.copy()
