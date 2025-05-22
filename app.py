@@ -25,22 +25,9 @@ combined_features = load_npz('assets/combined_features.npz')
 # with open('assets/knn_game_model_tuned.pkl', 'rb') as f:
 #     model = pickle.load(f)
 
-# Attempt to Load with Google Drive (Railway)
-MODEL_PATH = 'model.pkl'
-
-gdown.download(id="1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt", output=MODEL_PATH, quiet=False)
-
-with open(MODEL_PATH, 'rb') as f:
-    first_bytes = f.read(4)
-    print(f"First 4 bytes of model file: {first_bytes}")
-
 # Load the model
-# try:
-#     with open(MODEL_PATH, 'rb') as f:
-#         model = pickle.load(f)
-# except Exception as e:
-#     print("Failed to load pickle model:", e)
-#     raise e
+with open('assets/test_model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
 # Create index mapping
 data_df = df.copy()
