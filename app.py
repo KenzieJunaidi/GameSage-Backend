@@ -96,6 +96,15 @@ def game_info():
 
     return jsonify(game_data)
 
+# Verify for Railway
+@app.route('/check-assets')
+def check_assets():
+    try:
+        files = os.listdir('assets')
+        return jsonify({"assets_files": files})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
 # if __name__ == '__main__':
 #     app.run(debug=True)
 
