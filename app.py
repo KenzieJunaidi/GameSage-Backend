@@ -6,6 +6,7 @@ from scipy.sparse import load_npz
 import locale
 import os
 import requests
+import gdown
 
 app = Flask(__name__, static_url_path='/assets', static_folder='assets')
 
@@ -25,44 +26,19 @@ combined_features = load_npz('assets/combined_features.npz')
 #     model = pickle.load(f)
 
 # Attempt to Load with Google Drive (Railway)
-import os
-import pickle
-import requests
-
-def download_file_from_google_drive(file_id, destination):
-    URL = "https://docs.google.com/uc?export=download"
-
-    session = requests.Session()
-    response = session.get(URL, params={'id': file_id}, stream=True)
-    token = None
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            token = value
-            break
-
-    if token:
-        params = {'id': file_id, 'confirm': token}
-        response = session.get(URL, params=params, stream=True)
-
-    with open(destination, "wb") as f:
-        for chunk in response.iter_content(32768):
-            if chunk:
-                f.write(chunk)
-
-# Google Drive file ID from your shareable link
 FILE_ID = '1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt'
 MODEL_PATH = 'assets/knn_game_model_tuned.pkl'
+URL = f'https://drive.google.com/uc?id={FILE_ID}'
 
 if not os.path.exists(MODEL_PATH):
-    print("Downloading model from Google Drive...")
-    download_file_from_google_drive(FILE_ID, MODEL_PATH)
+    print("Downloading model from Google Drive with gdown...")
+    gdown.download(URL, MODEL_PATH, quiet=False)
 else:
     print("Model file found locally.")
 
 # Load the model
 with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
-
 
 # Create index mapping
 data_df = df.copy()
