@@ -4,6 +4,8 @@ import pickle
 import json
 from scipy.sparse import load_npz
 import locale
+import os
+import requests
 
 app = Flask(__name__, static_url_path='/assets', static_folder='assets')
 
@@ -17,14 +19,53 @@ index_to_drop = df[df['name'] == 'Fog of War'].index[0]
 df = df.drop(index_to_drop)
 
 # Load feature matrix and model
-combined_features = load_npz('assets/combined_features.npz')  # Make sure you save this from notebook
-with open('assets/knn_game_model_tuned.pkl', 'rb') as f:
+combined_features = load_npz('assets/combined_features.npz')
+
+# with open('assets/knn_game_model_tuned.pkl', 'rb') as f:
+#     model = pickle.load(f)
+
+# Attempt to Load with Google Drive (Railway)
+import os
+import pickle
+import requests
+
+def download_file_from_google_drive(file_id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+    response = session.get(URL, params={'id': file_id}, stream=True)
+    token = None
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            token = value
+            break
+
+    if token:
+        params = {'id': file_id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(32768):
+            if chunk:
+                f.write(chunk)
+
+# Google Drive file ID from your shareable link
+FILE_ID = '1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt'
+MODEL_PATH = 'assets/knn_game_model_tuned.pkl'
+
+if not os.path.exists(MODEL_PATH):
+    print("Downloading model from Google Drive...")
+    download_file_from_google_drive(FILE_ID, MODEL_PATH)
+else:
+    print("Model file found locally.")
+
+# Load the model
+with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
 
-# Create index mapping (optional if needed)
-data_df = df.copy()  # If you used data_df in the notebook
 
-
+# Create index mapping
+data_df = df.copy()
 
 # Recommendation function
 def recommend_games_knn(game_title, top_n=20):
@@ -96,19 +137,10 @@ def game_info():
 
     return jsonify(game_data)
 
-# Verify for Railway
-@app.route('/check-assets')
-def check_assets():
-    try:
-        files = os.listdir('assets')
-        return jsonify({"assets_files": files})
-    except Exception as e:
-        return jsonify({"error": str(e)})
-
 # if __name__ == '__main__':
 #     app.run(debug=True)
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get('PORT', 5000))  # Use Railway's assigned port
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
