@@ -27,14 +27,10 @@ combined_features = load_npz('assets/combined_features.npz')
 
 # Attempt to Load with Google Drive (Railway)
 FILE_ID = '1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt'
-MODEL_PATH = 'assets/knn_game_model_tuned.pkl'
+MODEL_PATH = 'model.pkl'
 URL = f'https://drive.google.com/uc?id={FILE_ID}'
 
-if not os.path.exists(MODEL_PATH):
-    print("Downloading model from Google Drive with gdown...")
-    gdown.download(URL, MODEL_PATH, quiet=False)
-else:
-    print("Model file found locally.")
+gdown.download(URL, MODEL_PATH, quiet=False)
 
 with open(MODEL_PATH, 'rb') as f:
     first_bytes = f.read(4)
