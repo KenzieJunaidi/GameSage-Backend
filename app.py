@@ -36,13 +36,17 @@ if not os.path.exists(MODEL_PATH):
 else:
     print("Model file found locally.")
 
+with open(MODEL_PATH, 'rb') as f:
+    first_bytes = f.read(4)
+    print(f"First 4 bytes of model file: {first_bytes}")
+
 # Load the model
-try:
-    with open(MODEL_PATH, 'rb') as f:
-        model = pickle.load(f)
-except Exception as e:
-    print("Failed to load pickle model:", e)
-    raise e
+# try:
+#     with open(MODEL_PATH, 'rb') as f:
+#         model = pickle.load(f)
+# except Exception as e:
+#     print("Failed to load pickle model:", e)
+#     raise e
 
 # Create index mapping
 data_df = df.copy()
