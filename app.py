@@ -28,9 +28,9 @@ combined_features = load_npz('assets/combined_features.npz')
 # Attempt to Load with Google Drive (Railway)
 FILE_ID = '1c-c9gR5F2f7DKnL6_pqG5FImGWD2l7tt'
 MODEL_PATH = 'model.pkl'
-URL = f'https://drive.google.com/uc?id={FILE_ID}'
+URL = f'https://drive.google.com/file/d/{FILE_ID}/view?usp=sharing'
 
-gdown.download(URL, MODEL_PATH, quiet=False)
+gdown.download(URL, MODEL_PATH, quiet=False, fuzzy=True)
 
 with open(MODEL_PATH, 'rb') as f:
     first_bytes = f.read(4)
